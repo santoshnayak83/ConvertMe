@@ -1,0 +1,377 @@
+﻿
+@{
+    ViewData["Title"] = "EmiCalculator";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ <style>
+ /*        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        } */
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .calculator-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        input[type="number"], input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input[type="range"] {
+            padding: 0;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 4px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .result h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-value {
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .chart-container {
+            margin-top: 30px;
+            height: 300px;
+        }
+        
+        
+    </style>
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="p-5 shadow rounded content">
+
+
+                    <h1>EMI Calculator</h1>
+
+                    <div class="calculator-container">
+                        <div class="input-group">
+                            <label for="loan-amount">Loan Amount (₹)</label>
+                            <input type="number" id="loan-amount" min="1000" max="100000000" value="1000000" step="1000">
+                            <input type="range" id="loan-amount-range" min="1000" max="100000000" value="1000000" step="1000">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="interest-rate">Interest Rate (% p.a.)</label>
+                            <input type="number" id="interest-rate" min="1" max="30" value="8.5" step="0.1">
+                            <input type="range" id="interest-rate-range" min="1" max="30" value="8.5" step="0.1">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="loan-tenure">Loan Tenure (years)</label>
+                            <input type="number" id="loan-tenure" min="1" max="30" value="15" step="1">
+                            <input type="range" id="loan-tenure-range" min="1" max="30" value="15" step="1">
+                        </div>
+
+                        <button id="calculate-btn">Calculate EMI</button>
+
+                        <div class="result" id="result">
+                            <h2>Loan Breakdown</h2>
+                            <div class="result-item">
+                                <span>Monthly EMI:</span>
+                                <span class="result-value" id="emi-value">₹0</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Total Interest:</span>
+                                <span class="result-value" id="total-interest">₹0</span>
+                            </div>
+                            <div class="result-item">
+                                <span>Total Payment:</span>
+                                <span class="result-value" id="total-payment">₹0</span>
+                            </div>
+
+                            <div class="chart-container" id="chart-container">
+                                <canvas id="emi-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        // Sync number inputs with range sliders
+                        document.getElementById('loan-amount').addEventListener('input', function () {
+                            document.getElementById('loan-amount-range').value = this.value;
+                        });
+
+                        document.getElementById('loan-amount-range').addEventListener('input', function () {
+                            document.getElementById('loan-amount').value = this.value;
+                        });
+
+                        document.getElementById('interest-rate').addEventListener('input', function () {
+                            document.getElementById('interest-rate-range').value = this.value;
+                        });
+
+                        document.getElementById('interest-rate-range').addEventListener('input', function () {
+                            document.getElementById('interest-rate').value = this.value;
+                        });
+
+                        document.getElementById('loan-tenure').addEventListener('input', function () {
+                            document.getElementById('loan-tenure-range').value = this.value;
+                        });
+
+                        document.getElementById('loan-tenure-range').addEventListener('input', function () {
+                            document.getElementById('loan-tenure').value = this.value;
+                        });
+
+                        // EMI Calculation
+                        document.getElementById('calculate-btn').addEventListener('click', function () {
+                            const loanAmount = parseFloat(document.getElementById('loan-amount').value);
+                            const interestRate = parseFloat(document.getElementById('interest-rate').value) / 100 / 12;
+                            const loanTenure = parseFloat(document.getElementById('loan-tenure').value) * 12;
+                            const loanTenure1 = parseFloat(document.getElementById('loan-tenure').value)
+                            alert(interestRate);
+                            // EMI calculation formula
+                            const emi = loanAmount * interestRate *
+                                (Math.pow(1 + interestRate, loanTenure)) /
+                                (Math.pow(1 + interestRate, loanTenure) - 1);
+                            alert(emi);
+                            const monthlyemi = (loanAmount / loanTenure1) + emi;
+                            alert(monthlyemi);
+                            const totalPayment = emi * loanTenure;
+                            const totalInterest = totalPayment - loanAmount;
+
+                            // Display results
+                            document.getElementById('emi-value').textContent = '₹' + monthlyemi.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            document.getElementById('total-interest').textContent = '₹' + totalInterest.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            document.getElementById('total-payment').textContent = '₹' + totalPayment.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+                            // Show result section
+                            document.getElementById('result').style.display = 'block';
+
+                            // Create chart
+                            createChart(loanAmount, totalInterest);
+                        });
+
+                        let emiChart = null;
+
+                        function createChart(principal, interest) {
+                            const ctx = document.getElementById('emi-chart').getContext('2d');
+
+                            // Destroy previous chart if exists
+                            if (emiChart) {
+                                emiChart.destroy();
+                            }
+
+                            emiChart = new Chart(ctx, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Principal Amount', 'Total Interest'],
+                                    datasets: [{
+                                        data: [principal, interest],
+                                        backgroundColor: [
+                                            '#3498db',
+                                            '#e74c3c'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom'
+                                        },
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function (context) {
+                                                    let label = context.label || '';
+                                                    if (label) {
+                                                        label += ': ';
+                                                    }
+                                                    const value = context.raw;
+                                                    label += '₹' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                    return label;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    </script>
+
+
+
+                    @* <h1>Changelog posts</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt dolore
+                        magna aliquyam erat, sed diam voluptua. At vero eos et ustoLorem ipsum dolor sit amet, consetetur.
+                    </p>
+                    <div class="mt-5">
+
+                        <!-- changelog post -->
+                        <h3 id="february-updates">February Updates</h3>
+                        <p><strong>Feb 6, 2019</strong></p>
+                        <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt dolore
+                            magna aliquyam erat, sed diam voluptua. At vero eos et ustoLorem ipsum dolor sit amet, consetetur.&rdquo;
+                        </p>
+                        <div class="mt-4">
+                            <div class="badge changed">Changed</div>
+                            <ul>
+                                <li>
+                                    <p>
+                                        Better support for using applying additional filters to posts_tax_query for categories for custom
+                                        WordPress syncs
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>Reporting fine-tuning for speed improvements (up to 60% improvement in latency)</p>
+                                </li>
+                                <li>
+                                    <p>Replaced login / registration pre-app screens with a cleaner design</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge removed">Removed</div>
+                            <ul>
+                                <li>Removed an issue with the sync autolinker only interlinking selectively.</li>
+                                <li>Removed up an issue with prematurely logging out users</li>
+                            </ul>
+                        </div>
+
+                        <hr>
+
+                        <!-- changelog post -->
+                        <h3 id="march-updates">March Updates</h3>
+                        <p><strong>Mar 6, 2019</strong></p>
+                        <p>
+                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor <br> invidunt
+                            dolore magna aliquyam erat, sed diam voluptua. At vero eos et ustoLorem ipsum dolor sit amet,
+                            consetetur.&rdquo;
+                        </p>
+                        <div class="mt-4">
+                            <div class="badge added">Added</div>
+                            <ul>
+                                <li>
+                                    Some scheduled changelogs, tweets, and slack messages queued up this weekend and were not published
+                                    on time. We fixed the issue and all delayed publications should be out.
+                                </li>
+                                <li>
+                                    We now prioritize keywords over title and body so customers can more effectively influence search
+                                    results
+                                </li>
+                                <li>
+                                    Support form in the Assistant is now protected with reCaptcha to reduce spam reinitializeOnUrlChange
+                                    added to the JavaScript API to improve support for pages with turbolinks
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge fixed">Fixed</div>
+                            <ul>
+                                <li>Fixed an issue with the sync autolinker only interlinking selectively.</li>
+                                <li>Fixed up an issue with prematurely logging out users</li>
+                            </ul>
+                        </div>
+
+                        <hr>
+
+                        <!-- changelog post -->
+                        <h3 id="changelog-label">Changelog label</h3>
+                        <div class="mt-4">
+                            <div class="badge added">Added</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge changed">Changed</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge depricated">Depricated</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge removed">Removed</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge fixed">Fixed</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge security">Security</div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="badge unreleased">Unreleased</div>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

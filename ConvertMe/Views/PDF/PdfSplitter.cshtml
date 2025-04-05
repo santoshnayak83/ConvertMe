@@ -1,0 +1,519 @@
+﻿
+@{
+    ViewData["Title"] = "PdfSplitter";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .splitter-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .upload-area:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .upload-area p {
+            margin: 0;
+            color: #7f8c8d;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .file-info {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .file-info.show {
+            display: block;
+        }
+        
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .file-icon {
+            color: #e74c3c;
+            font-size: 24px;
+        }
+        
+        .file-name {
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        
+        .file-size {
+            color: #7f8c8d;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .options {
+            margin-top: 20px;
+        }
+        
+        .option-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .range-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .range-inputs span {
+            white-space: nowrap;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .progress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .page-preview {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .page-thumbnail {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #eee;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .page-thumbnail.selected {
+            background-color: #e3f2fd;
+            border-color: #3498db;
+        }
+        
+        .page-number {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+       
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<h1>PDF Splitter/Separator</h1>
+
+<div class="splitter-container">
+    <div class="upload-area" id="upload-area">
+        <i class="fas fa-file-pdf"></i>
+        <p>Drag & drop a PDF file here or click to browse</p>
+        <input type="file" id="file-input" accept=".pdf">
+    </div>
+
+    <div class="file-info" id="file-info">
+        <div class="file-details">
+            <i class="fas fa-file-pdf file-icon"></i>
+            <span class="file-name" id="file-name"></span>
+            <span class="file-size" id="file-size"></span>
+            <button class="remove-btn" id="remove-btn"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="options">
+            <div class="option-group">
+                <label>Split Method:</label>
+                <select id="split-method">
+                    <option value="range">Page Range</option>
+                    <option value="every">Every N Pages</option>
+                    <option value="selected">Selected Pages</option>
+                </select>
+            </div>
+
+            <div class="option-group" id="range-options">
+                <label>Page Range:</label>
+                <div class="range-inputs">
+                    <span>From</span>
+                    <input type="number" id="from-page" min="1" value="1">
+                    <span>to</span>
+                    <input type="number" id="to-page" min="1" value="1">
+                    <span id="total-pages">of 1</span>
+                </div>
+            </div>
+
+            <div class="option-group" id="every-options" style="display: none;">
+                <label>Split every:</label>
+                <input type="number" id="every-n-pages" min="1" value="1">
+                <span>pages</span>
+            </div>
+
+            <div class="option-group" id="selected-options" style="display: none;">
+                <label>Select Pages:</label>
+                <div class="page-preview" id="page-preview"></div>
+                <small>Click to select/deselect pages</small>
+            </div>
+
+            <div class="option-group">
+                <label for="output-prefix">Output File Prefix:</label>
+                <input type="text" id="output-prefix" placeholder="split_" value="split_">
+            </div>
+        </div>
+
+        <button id="split-btn" disabled>Split PDF</button>
+    </div>
+
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+    // DOM elements
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const removeBtn = document.getElementById('remove-btn');
+    const splitBtn = document.getElementById('split-btn');
+    const statusDiv = document.getElementById('status');
+    const splitMethod = document.getElementById('split-method');
+    const rangeOptions = document.getElementById('range-options');
+    const everyOptions = document.getElementById('every-options');
+    const selectedOptions = document.getElementById('selected-options');
+    const fromPage = document.getElementById('from-page');
+    const toPage = document.getElementById('to-page');
+    const totalPages = document.getElementById('total-pages');
+    const everyNPages = document.getElementById('every-n-pages');
+    const pagePreview = document.getElementById('page-preview');
+    const outputPrefix = document.getElementById('output-prefix');
+
+    // Store uploaded file and page count
+    let pdfFile = null;
+    let pageCount = 0;
+    let selectedPages = new Set();
+
+    // Event listeners
+    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.backgroundColor = '#f0f8ff';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.backgroundColor = '';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.backgroundColor = '';
+        if (e.dataTransfer.files.length > 0) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            handleFile(fileInput.files[0]);
+        }
+    });
+
+    removeBtn.addEventListener('click', () => {
+        pdfFile = null;
+        fileInfo.classList.remove('show');
+        splitBtn.disabled = true;
+        fileInput.value = '';
+    });
+
+    splitMethod.addEventListener('change', updateSplitOptions);
+    splitBtn.addEventListener('click', splitPDF);
+
+    // Handle uploaded file
+    async function handleFile(file) {
+        if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            showStatus('Please upload a PDF file', 'error');
+            return;
+        }
+
+        pdfFile = file;
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.classList.add('show');
+        splitBtn.disabled = false;
+
+        try {
+            showStatus('Loading PDF to get page count...', 'progress');
+
+            const arrayBuffer = await file.arrayBuffer();
+            const { PDFDocument } = PDFLib;
+            const pdfDoc = await PDFDocument.load(arrayBuffer);
+
+            pageCount = pdfDoc.getPageCount();
+            fromPage.max = pageCount;
+            toPage.max = pageCount;
+            toPage.value = pageCount;
+            totalPages.textContent = `of ${pageCount}`;
+
+            // Create page thumbnails for selection
+            createPageThumbnails(pageCount);
+
+            showStatus(`PDF loaded with ${pageCount} pages`, 'success');
+        } catch (error) {
+            console.error('Error loading PDF:', error);
+            showStatus('Error loading PDF: ' + error.message, 'error');
+            pdfFile = null;
+            fileInfo.classList.remove('show');
+            splitBtn.disabled = true;
+        }
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Update UI based on selected split method
+    function updateSplitOptions() {
+        const method = splitMethod.value;
+
+        rangeOptions.style.display = method === 'range' ? 'block' : 'none';
+        everyOptions.style.display = method === 'every' ? 'block' : 'none';
+        selectedOptions.style.display = method === 'selected' ? 'block' : 'none';
+    }
+
+    // Create page thumbnails for selection
+    function createPageThumbnails(count) {
+        pagePreview.innerHTML = '';
+        selectedPages.clear();
+
+        for (let i = 1; i <= count; i++) {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'page-thumbnail';
+            thumbnail.dataset.page = i;
+
+            thumbnail.innerHTML = `
+                        <i class="fas fa-file-alt" style="font-size: 24px;"></i>
+                        <div class="page-number">${i}</div>
+                    `;
+
+            thumbnail.addEventListener('click', () => {
+                thumbnail.classList.toggle('selected');
+                if (thumbnail.classList.contains('selected')) {
+                    selectedPages.add(i);
+                } else {
+                    selectedPages.delete(i);
+                }
+            });
+
+            pagePreview.appendChild(thumbnail);
+        }
+    }
+
+    // Split PDF
+    async function splitPDF() {
+        if (!pdfFile) {
+            showStatus('No PDF file to split', 'error');
+            return;
+        }
+
+        splitBtn.disabled = true;
+        showStatus('Processing PDF...', 'progress');
+
+        try {
+            const arrayBuffer = await pdfFile.arrayBuffer();
+            const { PDFDocument } = PDFLib;
+            const pdfDoc = await PDFDocument.load(arrayBuffer);
+
+            const method = splitMethod.value;
+            let outputDocs = [];
+
+            if (method === 'range') {
+                // Split by page range
+                const from = parseInt(fromPage.value) || 1;
+                const to = parseInt(toPage.value) || pageCount;
+
+                if (from < 1 || from > pageCount || to < 1 || to > pageCount || from > to) {
+                    throw new Error('Invalid page range');
+                }
+
+                const newDoc = await PDFDocument.create();
+                const pages = await newDoc.copyPages(pdfDoc, Array.from({ length: to - from + 1 }, (_, i) => from - 1 + i));
+                pages.forEach(page => newDoc.addPage(page));
+                outputDocs.push(newDoc);
+            }
+            else if (method === 'every') {
+                // Split every N pages
+                const n = parseInt(everyNPages.value) || 1;
+                if (n < 1 || n > pageCount) {
+                    throw new Error('Invalid number of pages per split');
+                }
+
+                for (let i = 0; i < pageCount; i += n) {
+                    const newDoc = await PDFDocument.create();
+                    const end = Math.min(i + n, pageCount);
+                    const pages = await newDoc.copyPages(pdfDoc, Array.from({ length: end - i }, (_, j) => i + j));
+                    pages.forEach(page => newDoc.addPage(page));
+                    outputDocs.push(newDoc);
+                }
+            }
+            else if (method === 'selected') {
+                // Split selected pages
+                if (selectedPages.size === 0) {
+                    throw new Error('No pages selected');
+                }
+
+                const pagesArray = Array.from(selectedPages).sort((a, b) => a - b);
+                const newDoc = await PDFDocument.create();
+                const pages = await newDoc.copyPages(pdfDoc, pagesArray.map(p => p - 1));
+                pages.forEach(page => newDoc.addPage(page));
+                outputDocs.push(newDoc);
+            }
+
+            // Save output PDFs
+            let prefix = outputPrefix.value.trim() || 'split_';
+
+            for (let i = 0; i < outputDocs.length; i++) {
+                const pdfBytes = await outputDocs[i].save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+                let fileName = prefix;
+                if (outputDocs.length > 1) {
+                    fileName += (i + 1) + '_';
+                }
+
+                if (method === 'range') {
+                    fileName += `pages_${fromPage.value}-${toPage.value}`;
+                } else if (method === 'every') {
+                    const startPage = i * parseInt(everyNPages.value) + 1;
+                    const endPage = Math.min(startPage + parseInt(everyNPages.value) - 1, pageCount);
+                    fileName += `pages_${startPage}-${endPage}`;
+                } else if (method === 'selected') {
+                    fileName += 'selected_pages';
+                }
+
+                fileName += '.pdf';
+                saveAs(blob, fileName);
+            }
+
+            showStatus(`PDF split into ${outputDocs.length} file(s) successfully!`, 'success');
+        } catch (error) {
+            console.error('Error splitting PDF:', error);
+            showStatus('Error splitting PDF: ' + error.message, 'error');
+        } finally {
+            splitBtn.disabled = false;
+        }
+    }
+
+    // Show status message
+    function showStatus(message, type) {
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${type}`;
+        statusDiv.style.display = 'block';
+
+        if (type !== 'progress') {
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+</script>
+

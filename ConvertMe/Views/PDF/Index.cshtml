@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section">
+    <h3 class="section-title">PDF Convertor Category Type</h3>
+    <div class="row">
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-panel mb-4"></i>
+                    <h3 class="card-title h4">PDF Merger</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a asp-action="PdfMerger" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-credit-card mb-4"></i>
+                    <h3 class="card-title h4">Image To PDF</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a asp-controller="PDF" asp-action="ImagetoPdf" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-package mb-4"></i>
+                    <h3 class="card-title h4">PDF to Word</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a href="list.html" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-settings mb-4"></i>
+                    <h3 class="card-title h4">PDF Splitter</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a asp-controller="PDF" asp-action="PdfSplitter" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

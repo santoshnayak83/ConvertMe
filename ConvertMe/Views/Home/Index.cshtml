@@ -1,0 +1,254 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<section class="pb-0 pt-2 section">
+    <div class="row justify-content-between align-items-center">
+        <div class="col-lg-7 text-center text-lg-left">
+            <h3 class="mb-4">Any File, Anytime, Anywhere</h3>
+            <p class="mb-4">ConvertMe is your go-to online tool for fast, secure, and high-quality file conversions. Whether you need to convert documents, images, audio, videos, or archives, we have you covered with our easy-to-use platform.</p>
+            @* <form class="search-wrapper" action="search.html">
+            <input id="search-by" name="s" type="search" class="form-control form-control-lg"
+            placeholder="Search Here...">
+            <button type="submit" class="btn btn-primary">Search</button>
+            </form> *@
+        </div>
+        <div class="col-lg-4">
+            <img src="~/images/banner.jpg" alt="illustration" class="img-fluid">
+        </div>
+    </div>
+</section>
+<!-- /banner -->
+<!-- topics -->
+
+<section class="section">
+
+    <div class="row align-items-center">
+        <div class="col-lg-4 text-center d-lg-block d-none">
+            <img src="~/images/cta-illustration.jpg" class="img-fluid" alt="">
+        </div>
+        <div class="col-lg-8 text-lg-left text-center">
+            <h3 class="mb-3">ConvertMe Supports</h3>
+            <p>
+                ✅ Documents: PDF, DOCX, TXT, RTF, ODT, and more.
+                ✅ Images: JPG, PNG, GIF, TIFF, SVG, BMP.
+                ✅ Audio: MP3, WAV, AAC, FLAC, OGG.
+                ✅ Video: MP4, AVI, MOV, WMV, MKV.
+                ✅ Archives: ZIP, RAR, 7Z, TAR, GZ.
+            </p>
+            @*  <a href="contact.html" class="btn btn-primary">Submit a ticket</a> *@
+        </div>
+    </div>
+
+</section>
+<section class="pb-0 pt-1 section">
+    <h3 class="section-title">Popular Uses</h3>
+    <div class="row">
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-panel mb-4"></i>
+                    <h3 class="card-title h4">EMI Calculator</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a asp-action="EmiCalculator" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-credit-card mb-4"></i>
+                    <h3 class="card-title h4">Image To PDF</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a asp-controller="PDF" asp-action="ImagetoPdf" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-package mb-4"></i>
+                    <h3 class="card-title h4">PDF to Word</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a href="list.html" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+        <!-- topic -->
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card match-height">
+                <div class="card-body">
+                    <i class="card-icon ti-settings mb-4"></i>
+                    <h3 class="card-title h4">Image Compressor</h3>
+                    <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
+                    <a asp-controller="Image" asp-action="ImageCompressor" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section pb-0">
+    <div class="row justify-content-between align-items-center">
+        <div class="col-lg-7 text-center text-lg-left">
+            <h3 class="mb-4">Why Choose ConvertMe?</h3>
+            <p class="mb-4">
+                @* Convert between hundreds of file formats, including PDF, DOCX, JPG, PNG, MP3, MP4, and more.
+                ✔ Fast & Reliable – Enjoy quick conversions without compromising on quality.
+                ✔ Secure & Private – We prioritize your privacy, ensuring your files are processed securely and deleted after conversion.
+                ✔ Cloud-Based Convenience – No software installation needed! Convert files on any device, anywhere in the world.
+                ✔ User-Friendly Interface – Simple drag-and-drop functionality for hassle-free conversions. *@
+
+
+                ✅ Supports All Major Formats – Convert files across multiple categories, including documents, images, audio, video, and archives.
+
+                ✅ Fast & Efficient – Enjoy lightning-fast conversions without any delays, saving you valuable time.
+
+                ✅ Secure & Private – Your files are encrypted during conversion and automatically deleted after processing.
+
+                ✅ No Software Installation – Convert files directly from your browser without downloading or installing any additional software.
+
+                ✅ User-Friendly Interface – A simple drag-and-drop system makes file conversion effortless for everyone.
+
+                ✅ Cloud-Based Convenience – Convert files on any device, anytime, and from anywhere in the world.
+
+                ✅ High-Quality Conversions – Maintain the best possible quality for images, videos, and documents after conversion.
+
+                ✅ Batch Processing – Convert multiple files simultaneously, saving time and effort.
+
+                ✅ Cross-Platform Compatibility – Works seamlessly on Windows, macOS, Android, and iOS devices.
+
+                ✅ Multiple Output Options – Choose from a wide range of formats to meet your specific needs.
+
+                ✅ No Sign-Up Required – Convert files instantly without the hassle of creating an account.
+
+                ✅ Free to Use – Enjoy basic file conversions for free with no hidden charges.
+
+                ✅ Supports Large Files – Easily handle large files without compromising speed or performance.
+
+                ✅ Regular Updates – We continuously improve our platform to support the latest formats and ensure the best experience.
+
+                ✅ Trusted by Thousands – Join a growing community of users who rely on ConvertMe for quick and secure file conversions.
+
+                🚀 Experience hassle-free conversions with ConvertMe today!
+            </p>
+
+
+            @* <form class="search-wrapper" action="search.html">
+            <input id="search-by" name="s" type="search" class="form-control form-control-lg"
+            placeholder="Search Here...">
+            <button type="submit" class="btn btn-primary">Search</button>
+            </form> *@
+        </div>
+        <div class="col-lg-4 d-lg-block d-none">
+            <img src="~/images/banner.jpg" alt="illustration" class="img-fluid">
+        </div>
+    </div>
+</section>
+<!-- /topics -->
+<!-- faq -->
+<section class="section pb-0">
+    <h2 class="section-title">Mostly Asked Questions</h2>
+    <div class="row masonry-wrapper">
+        <!-- faq item -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <h3 class="card-title h5">Will updates also be free?</h3>
+                    <p class="card-text content">
+                        Lorem, <a href="#">link</a> <em>ipsum</em> dolor sit amet consectetur adipisicing elit. Cumque praesentium nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit recusandae maxime perspiciatis iste placeat architecto, mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum
+                        omnis vel sed temporibus. mollitia delectus ut ab quibusdam. Magnam cumque numquam tempore reprehenderit
+                        illo, unde cum omnis vel sed temporibus.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- faq item -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <h3 class="card-title h5">Discounts for students and Non Profit Organizations?</h3>
+                    <p class="card-text content">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                        nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit recusandae
+                        maxime perspiciatis iste placeat architecto.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- faq item -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <h3 class="card-title h5">I need something unique, Can you make it?</h3>
+                    <p class="card-text content">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                        nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit recusandae
+                        maxime perspiciatis iste placeat architecto, mollitia delectus <a href="#">link</a>
+                        ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel sed temporibus,
+                        repudiandae impedit nam ad enim porro, qui labore fugiat quod suscipit fuga necessitatibus. Perferendis,
+                        ipsum?
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- faq item -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <h3 class="card-title h5">Is there any documentation and support?</h3>
+                    <p class="card-text content">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                        nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit recusandae
+                        maxime perspiciatis iste placeat architecto, mollitia delectus <a href="#">link</a>
+                        ut ab quibusdam.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- faq item -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <h3 class="card-title h5">Any refunds?</h3>
+                    <p class="card-text content">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                        nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit recusandae
+                        maxime perspiciatis iste placeat architecto.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- faq item -->
+        <div class="col-md-6 mb-4">
+            <div class="card card-lg">
+                <div class="card-body">
+                    <h3 class="card-title h5">What is a product key?</h3>
+                    <p class="card-text content">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque praesentium
+                        nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /faq -->
+<!-- call to action -->
+<section class="section">
+
+    <div class="row align-items-center">
+        <div class="col-lg-4 text-center d-lg-block d-none">
+            <img src="~/images/cta-illustration.jpg" class="img-fluid" alt="">
+        </div>
+        <div class="col-lg-8 text-lg-left text-center">
+            <h2 class="mb-3">Still Didn&rsquo;t Find Your Answer?</h2>
+            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam <br> nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam</p>
+            <a href="contact.html" class="btn btn-primary">Submit a ticket</a>
+        </div>
+    </div>
+
+</section>
+<!-- /call to action -->
